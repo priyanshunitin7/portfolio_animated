@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🚀 Animated Portfolio — Because Static is Boring 😴
 
-## Getting Started
+“If your portfolio doesn’t move… recruiters will.” 💀
 
-First, run the development server:
+Welcome to my animated developer portfolio, where pixels don’t just sit — they perform.
+Built with modern web tech and a pinch of overthinking ✨
 
-```bash
+⸻
+
+🎬 Live Preview
+
+👉 Coming Soon / Add your deployed link here
+
+⸻
+
+🧠 What is this?
+
+This is not just a portfolio.
+This is a digital personality flex.
+
+It showcases:
+	•	My skills 💪
+	•	My projects 🚀
+	•	My creativity 🎨
+	•	And my ability to spend 5 hours fixing 1px alignment 😭
+
+  ⚡ Features
+	•	✨ Smooth animations that make UI jealous
+	•	🎯 Clean and modern design (minimal but not boring)
+	•	📱 Fully responsive (even your crush’s phone supports it)
+	•	🎭 Interactive components (hover = happiness)
+	•	🌙 Dark mode vibes (because light attracts bugs 🐛)
+	•	🚀 Fast performance (unlike my semester results)
+
+⸻
+
+🛠️ Tech Stack
+
+Because real developers flex their stack:
+	•	⚛️ React.js
+	•	⚡ Vite
+	•	🎨 Tailwind CSS
+	•	🎞️ Framer Motion
+	•	🧠 TypeScript
+
+  📂 Project Structure (aka organized chaos)
+  portfolio_animated/
+│
+├── src/
+│   ├── components/     # Where the magic happens ✨
+│   ├── assets/         # Images, icons, random stuff
+│   ├── App.jsx         # The boss file 👑
+│   └── main.jsx        # Entry point (the real OG)
+│
+├── public/             # Static files chilling here
+├── package.json        # Dependency drama 🎭
+└── vite.config.js      # Speed booster ⚡
+
+
+🧑‍💻 Getting Started
+
+Clone it like you clone your crush’s Instagram profile 👀
+git clone https://github.com/priyanshunitin7/portfolio_animated.git
+cd portfolio_animated
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Now open:
+http://localhost:5173/
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+🎯 Customization Guide
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Make it yours (because copying without editing = crime 🚨)
+	•	Update content in src/components
+	•	Replace images in assets
+	•	Change colors in tailwind.config.js
+	•	Add your projects (don’t be shy 😎)
 
-## Learn More
+⸻
 
-To learn more about Next.js, take a look at the following resources:
+🐛 Bugs & Issues
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+If you find a bug:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+👉 Congratulations, you’re now part of QA team.
 
-## Deploy on Vercel
+Open an issue or fix it and flex your PR 💪
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+⸻
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🤝 Contributing
+
+Wanna contribute?
+	•	Fork it 🍴
+	•	Improve it 🧠
+	•	PR it 🚀
+
+Let’s build something cooler than your friend’s portfolio 😏
+
+⸻
+
+📬 Contact
+
+If you liked this project (or just want to stalk professionally):
+	•	💼 LinkedIn:
+	•	📧 Email: nraj67609@gmail.com
+	•	🌐 Portfolio: This one obviously
+
+⸻
+
+🏁 Final Thought
+
+“A portfolio should not just tell your story…
+it should animate it.” 🎬
+
+⸻
+
+⭐ Support
+
+If this made you smile (or helped you):
+
+👉 Drop a ⭐ on the repo
+It gives +10 developer confidence 😎
