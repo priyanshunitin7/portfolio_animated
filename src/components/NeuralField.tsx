@@ -1,16 +1,16 @@
 "use client";
 
-import { useRef, useMemo } from 'react';
+import { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
 const ParticleField = () => {
-  const ref = useRef<any>(null);
+  const ref = useRef<THREE.Points>(null);
   const count = 4000;
   
-  const positions = useMemo(() => {
-    const positions = new Float32Array(count * 3);
+  const [positions] = useState(() => {
+    const array = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
         // Create a sprawling galaxy/neural field structure
         const r = 25 * Math.sqrt(Math.random());
@@ -18,10 +18,10 @@ const ParticleField = () => {
         const x = r * Math.cos(theta);
         const y = (Math.random() - 0.5) * 4; // vertical spread
         const z = r * Math.sin(theta);
-        positions.set([x, y, z], i * 3);
+        array.set([x, y, z], i * 3);
     }
-    return positions;
-  }, [count]);
+    return array;
+  });
 
   useFrame((state) => {
     if (!ref.current) return;

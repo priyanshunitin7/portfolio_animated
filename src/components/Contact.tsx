@@ -28,12 +28,12 @@ export default function Contact() {
               <span className="w-8 h-px bg-cyan-400"></span>05. Connect
             </p>
             <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-tight mb-8">
-              Let's build something <br className="hidden md:block"/>
+              Let&apos;s build something <br className="hidden md:block"/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">exceptional.</span>
             </h2>
             <p className="text-zinc-300 text-lg font-light leading-relaxed max-w-md mb-12">
               Currently actively seeking internship opportunities in software engineering and machine learning. 
-              My inbox is always open. Whether you have a question or just want to say hi, I'll try my best to get back to you!
+              My inbox is always open. Whether you have a question or just want to say hi, I&apos;ll try my best to get back to you!
             </p>
 
             <div className="space-y-6">

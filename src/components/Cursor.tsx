@@ -19,7 +19,7 @@ export default function Cursor() {
   const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
+    const timer = setTimeout(() => setIsMounted(true), 0);
     
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX - 8); // Center the 16px dot
@@ -49,6 +49,7 @@ export default function Cursor() {
     document.addEventListener("mouseover", handleMouseOver);
 
     return () => {
+      clearTimeout(timer);
       window.removeEventListener("mousemove", moveCursor);
       document.removeEventListener("mouseover", handleMouseOver);
     };
