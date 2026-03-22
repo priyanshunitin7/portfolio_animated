@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useScroll, useMotionValueEvent } from "framer-motion";
 
-const FRAME_COUNT = 64;
+const FRAME_COUNT = 44;
 
 export default function ScrollyCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -80,7 +80,7 @@ export default function ScrollyCanvas() {
         drawFrame(currentFrame);
       }
     };
-    
+
     // Initial size setup
     handleResize();
 
