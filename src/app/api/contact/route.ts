@@ -35,11 +35,11 @@ export async function POST(req: Request) {
     await Message.create({ name, email, message });
 
     // 🔥 SEND EMAIL (FIXED)
-    const response = await resend.emails.send({
-  from: "onboarding@resend.dev",
-  to: "nraj67609@gmail.com",
+   const response = await resend.emails.send({
+  from: "onboarding@resend.dev", // safest working sender
+  to: ["nraj67609@gmail.com"],   // 👈 MUST be array
   subject: "New Portfolio Message 🚀",
-  replyTo: email, // ✅ FIXED
+  replyTo: email,
   html: `
     <h3>New Message</h3>
     <p><b>Name:</b> ${name}</p>
@@ -48,7 +48,7 @@ export async function POST(req: Request) {
   `,
 });
 
-    console.log("EMAIL RESPONSE:", response); // 🔍 debug log
+console.log("EMAIL RESPONSE:", response); // 🔍 debug log
 
     return NextResponse.json({ success: true });
   } catch (error) {
