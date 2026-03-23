@@ -27,22 +27,26 @@ export async function POST(req: Request) {
 
     const { name, email, message } = await req.json();
 
-    // Save to DB
     await Message.create({ name, email, message });
 
-    // ✅ Initialize Resend HERE (FIX)
+    // ✅ Import INSIDE function (CRITICAL)
     const { Resend } = await import("resend");
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
+    // Debug
     console.log("RESEND KEY:", process.env.RESEND_API_KEY);
 
-    // Send email
     const response = await resend.emails.send({
-      from: "onboarding@resend.dev",
+      from: "Nitin Portfolio <onboarding@resend.dev>",
       to: ["nraj67609@gmail.com"],
       subject: "New Portfolio Message 🚀",
       replyTo: email,
+      text: `
+Name: ${name}
+Email: ${email}
+Message: ${message}
+      `,
       html: `
         <h3>New Message</h3>
         <p><b>Name:</b> ${name}</p>
