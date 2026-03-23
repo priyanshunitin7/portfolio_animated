@@ -43,7 +43,7 @@ export default function Contact() {
               </div>
               <div className="flex items-center gap-4 text-zinc-300">
                 <Mail className="text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]" size={20} />
-                <a href="mailto:nitinece093@gmail.com" className="font-medium tracking-wide hover:text-blue-300 transition-colors pointer-events-auto">
+                <a href="mailto:nraj67609@gmail.com" className="font-medium tracking-wide hover:text-blue-300 transition-colors pointer-events-auto">
                   nraj67609@gmail.com
                 </a>
               </div>
@@ -82,6 +82,9 @@ export default function Contact() {
               <input type="hidden" name="_subject" value="New submission from Portfolio Contact Form!" />
               <input type="hidden" name="_captcha" value="false" />
               <input type="hidden" name="_template" value="table" />
+              
+              <input type="hidden" name="_autoresponse" value="Thanks! I received your message." />
+              <input type="hidden" name="_debug" value="true" />
 
               <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex-1 relative group">
