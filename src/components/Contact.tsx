@@ -54,6 +54,15 @@ export default function Contact() {
               <a
                 href="/cv.pdf"
                 download="Nitin_Raj_CV.pdf"
+                onClick={() => {
+    fetch("/api/track", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ type: "cv_download" }),
+    });
+  }}
                 className="inline-flex items-center gap-3 px-7 py-3.5 rounded-full border border-cyan-500/40 bg-cyan-500/10 text-cyan-300 font-mono text-sm tracking-widest hover:bg-cyan-500/20 hover:border-cyan-400/70 hover:text-cyan-200 transition-all duration-300 shadow-[0_0_20px_rgba(6,182,212,0.15)] hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] group"
               >
                 <Download
@@ -73,8 +82,27 @@ export default function Contact() {
             transition={{ duration: 0.8, delay: 0.1 }}
           >
             <form 
-              action="https://formsubmit.co/nraj67609@gmail.com" 
-              method="POST"
+              onSubmit={async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
+
+    const res = await fetch("/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (res.ok) {
+      alert("Message sent 🚀");
+      e.target.reset();
+    } else {
+      alert("Something went wrong ❌");
+    }
+  }}
               className="space-y-8 bg-gradient-to-br from-white/[0.05] to-transparent border border-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-3xl shadow-2xl relative pointer-events-auto"
             >
               <div className="absolute inset-0 rounded-3xl border border-transparent hover:border-blue-500/30 transition-colors pointer-events-none" />
@@ -147,20 +175,38 @@ export default function Contact() {
             {/* ── Replace href values with your real profile URLs ── */}
             <a
               href="https://linkedin.com/in/nitinraj03"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-zinc-400 hover:text-[#0A66C2] transition-colors duration-300"
-              aria-label="LinkedIn"
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={() => {
+    fetch("/api/track", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ type: "linkedin_click" }),
+    });
+  }}
+  className="text-zinc-400 hover:text-[#0A66C2] transition-colors duration-300"
+  aria-label="LinkedIn"
             >
               <Linkedin size={20} />
             </a>
             <a
-              href="https://github.com/priyanshunitin7"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-zinc-400 hover:text-white transition-colors duration-300"
-              aria-label="GitHub"
-            >
+  href="https://github.com/priyanshunitin7"
+  target="_blank"
+  rel="noopener noreferrer"
+  onClick={() => {
+    fetch("/api/track", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ type: "github_click" }),
+    });
+  }}
+  className="text-zinc-400 hover:text-white transition-colors duration-300"
+  aria-label="GitHub"
+>
               <Github size={20} />
             </a>
             <a href="mailto:nraj67609@gmail.com?subject=Portfolio%20Contact&body=Hi%20Nitin,%0A%0AI found your portfolio and..." className="text-zinc-400 hover:text-white transition-colors flex items-center gap-2 text-sm font-medium">
