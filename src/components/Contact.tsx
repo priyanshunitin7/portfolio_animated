@@ -44,7 +44,7 @@ export default function Contact() {
               <div className="flex items-center gap-4 text-zinc-300">
                 <Mail className="text-blue-500 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]" size={20} />
                 <a href="mailto:nitinece093@gmail.com" className="font-medium tracking-wide hover:text-blue-300 transition-colors pointer-events-auto">
-                  nitinece093@gmail.com
+                  nraj67609@gmail.com
                 </a>
               </div>
             </div>
