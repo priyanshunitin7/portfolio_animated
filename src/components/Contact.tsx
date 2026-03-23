@@ -4,8 +4,12 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Download, Github, Linkedin, Mail, MapPin } from "lucide-react";
 import Magnetic from "./Magnetic";
 import NeuralField from "./NeuralField";
+import emailjs from "@emailjs/browser";
+import { useState } from "react";
 
 export default function Contact() {
+  const [status, setStatus] = useState("idle");
+  const [lastSent, setLastSent] = useState(0);
   return (
     <section id="contact" className="relative z-20 bg-[#0a0a0a] pt-32 pb-12 px-6 md:px-12 lg:px-24 overflow-hidden min-h-screen">
       {/* Interactive 3D WebGL Background */}
@@ -83,36 +87,52 @@ export default function Contact() {
           >
             <form 
               onSubmit={async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
+  const now = Date.now();
+  if (now - lastSent < 5000) {
+    alert("Please wait a few seconds before sending again");
+    return;
+  }
 
-    const res = await fetch("/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+  const form = e.currentTarget;
+  const honeypot = form.querySelector('input[name="company"]') as HTMLInputElement | null;
 
-    if (res.ok) {
-      alert("Message sent 🚀");
-      e.target.reset();
-    } else {
-      alert("Something went wrong ❌");
+if (honeypot?.value) return;
+  setStatus("sending");
+
+  try {
+    const result = await emailjs.sendForm(
+      "service_n9n6g0q",
+      "template_7t63d7v",
+      form,
+      "IpjdUvcUtOhBY-BsX"
+    );
+
+    if (result.text === "OK") {
+      setStatus("success");
+      setLastSent(Date.now()); // ✅ added
+      form.reset();
+
+      setTimeout(() => setStatus("idle"), 3000);
     }
+  } catch (error) {
+    setStatus("error");
+    setTimeout(() => setStatus("idle"), 3000);
+  }
+    
   }}
               className="space-y-8 bg-gradient-to-br from-white/[0.05] to-transparent border border-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-3xl shadow-2xl relative pointer-events-auto"
             >
               <div className="absolute inset-0 rounded-3xl border border-transparent hover:border-blue-500/30 transition-colors pointer-events-none" />
+              <input
+  type="text"
+  name="company"
+  className="hidden"
+  autoComplete="off"
+/>
 
-              <input type="hidden" name="_subject" value="New submission from Portfolio Contact Form!" />
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_template" value="table" />
-              
-              <input type="hidden" name="_autoresponse" value="Thanks! I received your message." />
-              <input type="hidden" name="_debug" value="true" />
+
 
               <div className="flex flex-col md:flex-row gap-8">
                 <div className="flex-1 relative group">
@@ -158,13 +178,28 @@ export default function Contact() {
                 </label>
               </div>
 
-              <Magnetic>
-                <button type="submit" className="relative group overflow-hidden flex items-center justify-center gap-3 w-full px-10 py-5 bg-white/[0.03] backdrop-blur-2xl border border-white/10 text-white font-medium tracking-wide rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_0_40px_rgba(255,255,255,0.05)] hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_0_60px_rgba(255,255,255,0.1)] hover:bg-white/10 transition-all duration-500 hover:scale-105 active:scale-95 cursor-pointer">
-                  <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">Send Message</span>
-                  <ArrowUpRight className="relative z-10 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 opacity-70 group-hover:opacity-100" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 -translate-x-[150%] opacity-0 group-hover:opacity-100 group-hover:animate-[shimmer_1.5s_ease-out_infinite]" />
-                </button>
-              </Magnetic>
+             <Magnetic>
+  <button
+    type="submit"
+    disabled={status === "sending"}
+    className="relative group overflow-hidden flex items-center justify-center gap-3 w-full px-10 py-5 bg-white/[0.03] backdrop-blur-2xl border border-white/10 text-white font-medium tracking-wide rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.1),0_0_40px_rgba(255,255,255,0.05)] hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.2),0_0_60px_rgba(255,255,255,0.1)] hover:bg-white/10 transition-all duration-500 hover:scale-105 active:scale-95 cursor-pointer disabled:opacity-50"
+  >
+    
+    {/* TEXT SWITCHING ONLY */}
+    <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">
+      {status === "idle" && "Send Message"}
+      {status === "sending" && "Sending..."}
+      {status === "success" && "Sent ✓"}
+      {status === "error" && "Try Again"}
+    </span>
+
+    {/* ICON SAME */}
+    <ArrowUpRight className="relative z-10 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 opacity-70 group-hover:opacity-100" />
+
+    {/* SHIMMER SAME */}
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 -translate-x-[150%] opacity-0 group-hover:opacity-100 group-hover:animate-[shimmer_1.5s_ease-out_infinite]" />
+  </button>
+</Magnetic>
             </form>
           </motion.div>
         </div>
@@ -222,3 +257,4 @@ export default function Contact() {
     </section>
   );
 }
+
