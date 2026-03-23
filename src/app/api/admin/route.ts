@@ -39,15 +39,22 @@ export async function GET() {
     const cv = await Visit.countDocuments({ type: "cv_download" });
     const messages = await Message.countDocuments();
 
-    return NextResponse.json({
-      visits,
-      github,
-      linkedin,
-      cv,
-      messages,
-    });
+   return NextResponse.json({
+  visits: visits || 0,
+  github: github || 0,
+  linkedin: linkedin || 0,
+  cv: cv || 0,
+  messages: messages || 0,
+});
+
   } catch (error) {
-    console.error("ADMIN ERROR:", error);
-    return NextResponse.json({ success: false });
-  }
+  console.error("ADMIN ERROR:", error);
+  return NextResponse.json({
+    visits: 0,
+    github: 0,
+    linkedin: 0,
+    cv: 0,
+    messages: 0,
+  });
+}
 }
