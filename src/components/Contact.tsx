@@ -249,9 +249,16 @@ if (honeypot?.value) return;
             </a>
           </div>
 
-          <p className="text-zinc-500 font-mono text-xs tracking-widest">
-            © {new Date().getFullYear()} NITIN RAJ.
-          </p>
+          <p
+  onClick={(e) => {
+    if (e.detail === 3) {
+      window.location.href = "/login";
+    }
+  }}
+  className="text-zinc-500 font-mono text-xs tracking-widest cursor-default select-none pointer-events-auto"
+>
+  © {new Date().getFullYear()} NITIN RAJ.
+</p>
         </div>
       </div>
     </section>
