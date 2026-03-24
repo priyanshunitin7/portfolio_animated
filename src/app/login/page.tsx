@@ -457,9 +457,47 @@ export default function LoginPage() {
           border-radius:0 20px 20px 0;padding:44px 44px 38px;
           display:flex;flex-direction:column;backdrop-filter:blur(40px);
           position:relative;overflow:hidden;
-          transition:border-color .35s,box-shadow .35s;}
+          transition:
+    transform 0.35s cubic-bezier(.22,1,.36,1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+      }
+          .nv-right:hover {
+  transform: translateY(-6px) scale(1.01);
+
+  border-color: rgba(167,139,250,0.6);
+
+  box-shadow:
+    0 0 60px rgba(139,92,246,0.25),
+    0 0 120px rgba(34,211,238,0.12),
+    0 30px 80px rgba(0,0,0,0.6);
+}
+    
         .nv-right::before{content:'';position:absolute;top:0;left:18%;right:18%;height:1px;
           background:linear-gradient(90deg,transparent,rgba(167,139,250,.75),transparent);}
+          .nv-right::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+
+  background: linear-gradient(
+    120deg,
+    transparent 20%,
+    rgba(255,255,255,0.08) 50%,
+    transparent 80%
+  );
+
+  opacity: 0;
+  transform: translateX(-120%);
+  transition: opacity 0.3s ease;
+}
+
+.nv-right:hover::after {
+  opacity: 1;
+  transform: translateX(120%);
+  transition: transform 0.8s ease;
+}
         .nv-right.nv-err{border-color:rgba(248,113,113,.45);
           box-shadow:0 0 40px rgba(248,113,113,.18);}
         .nv-right.nv-ok{border-color:rgba(74,222,128,.35);
