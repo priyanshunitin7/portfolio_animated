@@ -4,7 +4,9 @@ import mongoose from "mongoose";
 // connect DB
 const connectDB = async () => {
   if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(process.env.MONGODB_URI!);
+    await mongoose.connect(process.env.MONGODB_URI!, {
+      dbName: "portfolio-db", // 🔥 FIX
+    });
   }
 };
 

@@ -4,7 +4,9 @@ import mongoose from "mongoose";
 // ✅ Proper DB connection function
 const connectDB = async () => {
   if (mongoose.connection.readyState === 0) {
-    await mongoose.connect(process.env.MONGODB_URI!);
+    await mongoose.connect(process.env.MONGODB_URI!, {
+      dbName: "portfolio-db", // 🔥 FIX
+    });
   }
 };
 
@@ -21,10 +23,11 @@ const Visit =
 // ✅ POST request
 export async function POST(req: Request) {
   try {
-    // 🔥 Ensure DB is connected
     await connectDB();
 
     const { type } = await req.json();
+
+    console.log("Saving:", type); // 🔥 debug
 
     await Visit.create({ type });
 
