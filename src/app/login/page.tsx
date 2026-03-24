@@ -298,6 +298,45 @@ export default function LoginPage() {
   const [mounted, setMounted] = useState(false);
   const [glitch, setGlitch] = useState(false);
   const router = useRouter();
+  const leftRef = useRef<HTMLDivElement>(null);
+const rightRef = useRef<HTMLDivElement>(null);
+
+//new addition
+const handleTilt = (
+  e: React.MouseEvent,
+  element: HTMLDivElement | null
+) => {
+  if (!element) return;
+
+  const rect = element.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  const isLeft = element === leftRef.current;
+  const intensity = isLeft ? 5 : 8;
+
+  const rotateX = ((y / rect.height) - 0.5) * -intensity;
+  const rotateY = ((x / rect.width) - 0.5) * intensity;
+
+  element.style.transform = `
+    perspective(1000px)
+    rotateX(${rotateX}deg)
+    rotateY(${rotateY}deg)
+    scale(1.02)
+  `;
+};
+
+const resetTilt = (element: HTMLDivElement | null) => {
+  if (!element) return;
+
+  element.style.transform = `
+    perspective(1000px)
+    rotateX(0deg)
+    rotateY(0deg)
+    scale(1)
+  `;
+};
+//new addition over 
 
   const sysMsg = useTypewriter(
     phase === "idle"     ? "READY · AWAITING AUTHORIZATION"   :
@@ -407,11 +446,45 @@ export default function LoginPage() {
           border-radius:20px 0 0 20px;padding:30px 22px 28px;
           display:flex;flex-direction:column;gap:26px;
           backdrop-filter:blur(40px);border-right:1px solid rgba(120,80,255,0.1);
-          position:relative;overflow:hidden;}
+          position:relative;overflow:hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            will-change: transform;
+  transform-style: preserve-3d;
+}
+          .nv-left:hover {
+  
+
+  border-color: rgba(139,92,246,0.4);
+
+  box-shadow:
+    0 0 30px rgba(139,92,246,0.15),
+    0 10px 40px rgba(0,0,0,0.5);
+}
         .nv-left::before{content:'';position:absolute;top:0;left:28%;right:28%;height:1px;
           background:linear-gradient(90deg,transparent,var(--ac),transparent);opacity:.55;}
-        .nv-left::after{content:'';position:absolute;top:20%;bottom:20%;left:0;width:1px;
-          background:linear-gradient(180deg,transparent,var(--ac),transparent);opacity:.3;}
+
+        .nv-left::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+
+  background: linear-gradient(
+    120deg,
+    transparent 30%,
+    rgba(139,92,246,0.08) 50%,
+    transparent 70%
+  );
+
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 0.3s ease;
+}
+  .nv-left:hover::after {
+  opacity: 1;
+  transform: translateX(100%);
+  transition: transform 0.7s ease;
+}
 
         /* LOGO */
         .nv-logo{display:flex;align-items:center;gap:10px;}
@@ -461,9 +534,11 @@ export default function LoginPage() {
     transform 0.35s cubic-bezier(.22,1,.36,1),
     border-color 0.35s ease,
     box-shadow 0.35s ease;
+     will-change: transform;
+  transform-style: preserve-3d;
       }
           .nv-right:hover {
-  transform: translateY(-6px) scale(1.01);
+  
 
   border-color: rgba(167,139,250,0.6);
 
@@ -502,6 +577,15 @@ export default function LoginPage() {
           box-shadow:0 0 40px rgba(248,113,113,.18);}
         .nv-right.nv-ok{border-color:rgba(74,222,128,.35);
           box-shadow:0 0 50px rgba(74,222,128,.15);}
+
+          .nv-left > *,
+.nv-right > * {
+  transform: translateZ(25px);
+}
+  .nv-left > *,
+.nv-right > * {
+  backface-visibility: hidden;
+}
 
         /* BRACKETS */
         .nv-bk{position:absolute;width:16px;height:16px;pointer-events:none;}
@@ -649,7 +733,12 @@ export default function LoginPage() {
 
         <div className="nv-shell">
           {/* ─── LEFT ─── */}
-          <div className="nv-left">
+          <div
+  ref={leftRef}
+  onMouseMove={(e) => handleTilt(e, leftRef.current)}
+  onMouseLeave={() => resetTilt(leftRef.current)}
+  className="nv-left"
+>
             {/* Logo */}
             <div className="nv-logo">
               <div className="nv-logo-hex">
@@ -697,7 +786,12 @@ export default function LoginPage() {
           </div>
 
           {/* ─── RIGHT ─── */}
-          <div className={`nv-right${phase==="error"?" nv-err":phase==="success"?" nv-ok":""}`}>
+          <div
+  ref={rightRef}
+  onMouseMove={(e) => handleTilt(e, rightRef.current)}
+  onMouseLeave={() => resetTilt(rightRef.current)}
+  className={`nv-right${phase==="error"?" nv-err":phase==="success"?" nv-ok":""}`}
+>
             {(["tl","tr","bl","br"] as const).map(p => <div key={p} className={`nv-bk ${p}`}/>)}
 
             {/* Header */}
