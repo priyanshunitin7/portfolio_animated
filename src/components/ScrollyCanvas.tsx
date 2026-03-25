@@ -100,8 +100,15 @@ export default function ScrollyCanvas() {
   });
 
   return (
-    <div ref={containerRef} className="relative h-[500vh] w-full bg-[#121212]">
-      <div className="sticky top-0 h-screen w-full overflow-hidden">
+    <div
+  ref={containerRef}
+  className="relative h-[500vh] w-full bg-[#121212]"
+  style={{ overflowX: "clip" }}
+>
+      <div
+  className="sticky top-0 h-screen w-full overflow-hidden"
+  style={{ overflowX: "clip" }}
+>
         <canvas
           ref={canvasRef}
           className="absolute inset-0 h-full w-full object-cover"

@@ -18,7 +18,6 @@ const navLinks = [
   { name: "Contact",    href: "#contact",    index: "06" },
 ];
 
-/* prevents SSR/hydration mismatch — renders nothing on server */
 function useIsMounted() {
   const [m, setM] = useState(false);
   useEffect(() => setM(true), []);
@@ -26,58 +25,57 @@ function useIsMounted() {
 }
 
 export default function Navbar() {
-  const isMounted   = useIsMounted();
-  const [activeSection, setActiveSection] = useState(() => {
-  if (typeof window === "undefined") return "home";
-  const sections = navLinks.map((l) => l.href.substring(1));
-  for (const s of sections) {
-    const el = document.getElementById(s);
-    if (el) {
-      const r = el.getBoundingClientRect();
-      if (r.top <= 220 && r.bottom >= 220) return s;
-    }
-  }
-  return "home";
-});
+  const isMounted = useIsMounted();
+  const [activeSection, setActiveSection] = useState("home");
 
-  const [hoveredLink,   setHoveredLink]   = useState<string | null>(null);
-  const [mobileOpen,    setMobileOpen]    = useState(false);
-  const [scrolled,      setScrolled]      = useState(false);
-  const [mousePos,      setMousePos]      = useState({ x: 0, y: 0 });
+  const [hoveredLink,  setHoveredLink]  = useState<string | null>(null);
+  const [mobileOpen,   setMobileOpen]   = useState(false);
+  const [scrolled,     setScrolled]     = useState(false);
+  const [mousePos,     setMousePos]     = useState({ x: 0, y: 0 });
   const navRef = useRef<HTMLDivElement>(null);
 
   const { scrollY } = useScroll();
 
-  /* scroll tracker for glass effect */
   useMotionValueEvent(scrollY, "change", (latest) => {
     setScrolled(latest > 30);
   });
 
-  /* scroll to top on every reload */
-useEffect(() => {
-  window.scrollTo({ top: 0, behavior: "instant" });
-  setActiveSection("home");
-}, []);
-
-  /* active section tracker */
   useEffect(() => {
-    const onScroll = () => {
-      const sections = navLinks.map((l) => l.href.substring(1));
-      let current = "home";
-      for (const s of sections) {
-        const el = document.getElementById(s);
-        if (el) {
-          const r = el.getBoundingClientRect();
-          if (r.top <= 220 && r.bottom >= 220) current = s;
-        }
-      }
-      setActiveSection(current);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.scrollTo({ top: 0, behavior: "instant" });
+    setActiveSection("home");
   }, []);
 
-  /* mouse-tracking aura (desktop only) */
+  useEffect(() => {
+  const sections = navLinks.map((l) =>
+    document.getElementById(l.href.substring(1))
+  );
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    },
+    {
+      root: null,
+      rootMargin: "-40% 0px -50% 0px",
+      threshold: 0,
+    }
+  );
+
+  sections.forEach((section) => {
+    if (section) observer.observe(section);
+  });
+
+  return () => {
+    sections.forEach((section) => {
+      if (section) observer.unobserve(section);
+    });
+  };
+}, []);
+
   useEffect(() => {
     const el = navRef.current;
     if (!el) return;
@@ -89,21 +87,40 @@ useEffect(() => {
     return () => el.removeEventListener("mousemove", onMove);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
   const handleClick = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
-  ) => {
-    e.preventDefault();
-    setMobileOpen(false);
-    const el = document.getElementById(href.substring(1));
-    if (el) window.scrollTo({ top: el.offsetTop, behavior: "smooth" });
-  };
+  e: React.MouseEvent<HTMLAnchorElement>,
+  href: string
+) => {
+  e.preventDefault();
+  setMobileOpen(false);
+
+  const el = document.getElementById(href.substring(1));
+  if (!el) return;
+
+  const NAVBAR_OFFSET = 100; // adjust if needed
+
+  const y =
+    el.getBoundingClientRect().top +
+    window.pageYOffset -
+    NAVBAR_OFFSET;
+
+  window.scrollTo({ top: y, behavior: "smooth" });
+};
 
   const activeIdx = navLinks.findIndex(
     (l) => l.href.substring(1) === activeSection
   );
 
-  /* avoid hydration mismatch — render nothing until client mount */
   if (!isMounted) return null;
 
   return (
@@ -112,7 +129,6 @@ useEffect(() => {
           DESKTOP NAV
       ════════════════════════════════════════ */}
       <motion.header
-        style={{}}
         variants={{ visible: { opacity: 1 } }}
         animate="visible"
         transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
@@ -204,7 +220,6 @@ useEffect(() => {
                     transition: "color 0.2s",
                   }}
                 >
-                  {/* Pill background — no layoutId, pure opacity transition per link */}
                   <span
                     className="absolute inset-0 pointer-events-none"
                     style={{
@@ -220,7 +235,6 @@ useEffect(() => {
                     }}
                   />
 
-                  {/* Numeric index */}
                   <span
                     className="relative z-10 font-mono leading-none"
                     style={{
@@ -238,7 +252,6 @@ useEffect(() => {
                     {link.index}
                   </span>
 
-                  {/* Label */}
                   <span
                     className="relative z-10 font-semibold leading-none"
                     style={{
@@ -251,7 +264,6 @@ useEffect(() => {
                     {link.name}
                   </span>
 
-                  {/* Glowing underline — always rendered, opacity-toggled per link */}
                   <span
                     className="absolute -bottom-[2px] left-1/2 -translate-x-1/2 h-[2px] w-6 pointer-events-none"
                     style={{
@@ -268,24 +280,27 @@ useEffect(() => {
               </Magnetic>
             );
           })}
-
         </div>
       </motion.header>
 
       {/* ════════════════════════════════════════
           MOBILE TOP BAR
+          — Full width, no overflow, safe areas
       ════════════════════════════════════════ */}
       <motion.div
-        variants={{
-          visible: { y: 0, opacity: 1 },
-        }}
+        variants={{ visible: { y: 0, opacity: 1 } }}
         animate="visible"
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-0 left-0 right-0 z-[100] flex md:hidden items-center justify-between px-5 py-4"
+        className="fixed top-0 left-0 right-0 z-[100] flex md:hidden items-center justify-between"
         style={{
+          /* Safe area insets for notched phones */
+          paddingTop: "max(env(safe-area-inset-top), 12px)",
+          paddingBottom: 12,
+          paddingLeft: "max(env(safe-area-inset-left), 16px)",
+          paddingRight: "max(env(safe-area-inset-right), 16px)",
           background: scrolled
-            ? "rgba(8,8,10,0.92)"
-            : "rgba(8,8,10,0.62)",
+            ? "rgba(8,8,10,0.95)"
+            : "rgba(8,8,10,0.75)",
           backdropFilter: "blur(36px) saturate(200%)",
           WebkitBackdropFilter: "blur(36px) saturate(200%)",
           borderBottom: "1px solid rgba(255,255,255,0.055)",
@@ -294,9 +309,9 @@ useEffect(() => {
         }}
       >
         {/* Brand mark + active label */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 min-w-0">
           <div
-            className="flex items-center justify-center w-9 h-9 font-bold text-white"
+            className="flex-shrink-0 flex items-center justify-center w-9 h-9 font-bold text-white"
             style={{
               borderRadius: 10,
               background:
@@ -310,7 +325,7 @@ useEffect(() => {
           >
             P
           </div>
-          <div className="flex flex-col leading-none gap-[3px]">
+          <div className="flex flex-col leading-none gap-[3px] min-w-0">
             <span
               style={{
                 fontSize: 10,
@@ -323,7 +338,7 @@ useEffect(() => {
               portfolio
             </span>
             <span
-              className="font-semibold capitalize"
+              className="font-semibold capitalize truncate"
               style={{
                 fontSize: 14,
                 color: "rgba(255,255,255,0.88)",
@@ -335,10 +350,27 @@ useEffect(() => {
           </div>
         </div>
 
+        {/* Progress indicator — small pill showing scroll progress */}
+        <div
+          className="flex-1 mx-4 h-[3px] rounded-full overflow-hidden"
+          style={{ background: "rgba(255,255,255,0.07)" }}
+        >
+          <motion.div
+            className="h-full rounded-full"
+            initial={false}
+            animate={{ width: `${((activeIdx + 1) / navLinks.length) * 100}%` }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(120,80,255,0.9), rgba(56,189,248,0.9))",
+            }}
+          />
+        </div>
+
         {/* Hamburger */}
         <button
           onClick={() => setMobileOpen((v) => !v)}
-          className="relative flex items-center justify-center w-11 h-11 focus:outline-none"
+          className="flex-shrink-0 relative flex items-center justify-center w-11 h-11 focus:outline-none"
           style={{
             borderRadius: 11,
             background: mobileOpen
@@ -388,6 +420,7 @@ useEffect(() => {
 
       {/* ════════════════════════════════════════
           MOBILE DROPDOWN PANEL
+          — Full screen overlay, easier tap targets
       ════════════════════════════════════════ */}
       <AnimatePresence>
         {mobileOpen && (
@@ -401,22 +434,25 @@ useEffect(() => {
               transition={{ duration: 0.3 }}
               className="fixed inset-0 z-[98] md:hidden"
               style={{
-                background: "rgba(0,0,0,0.62)",
-                backdropFilter: "blur(4px)",
+                background: "rgba(0,0,0,0.72)",
+                backdropFilter: "blur(6px)",
               }}
               onClick={() => setMobileOpen(false)}
             />
 
-            {/* Panel */}
+            {/* Panel — anchored under the top bar, full width with safe-area gutters */}
             <motion.nav
               key="mob-panel"
-              initial={{ opacity: 0, y: -20, scale: 0.96 }}
+              initial={{ opacity: 0, y: -12, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -16, scale: 0.97 }}
-              transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed left-4 right-4 z-[99] md:hidden flex flex-col overflow-hidden"
+              exit={{ opacity: 0, y: -10, scale: 0.98 }}
+              transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+              className="fixed z-[99] md:hidden flex flex-col overflow-hidden"
               style={{
-                top: 78,
+                /* Start below the topbar; account for safe-area */
+                top: "calc(env(safe-area-inset-top, 0px) + 68px)",
+                left: "max(env(safe-area-inset-left, 0px), 12px)",
+                right: "max(env(safe-area-inset-right, 0px), 12px)",
                 borderRadius: 20,
                 background: "rgba(10,10,14,0.97)",
                 backdropFilter: "blur(40px) saturate(200%)",
@@ -438,8 +474,8 @@ useEffect(() => {
                 }}
               />
 
-              {/* Links list */}
-              <div className="px-3 pt-4 pb-3 flex flex-col gap-1">
+              {/* Links — 2-column grid on wider phones, 1-col on narrow */}
+              <div className="px-3 pt-4 pb-3 grid grid-cols-2 gap-2">
                 {navLinks.map((link, i) => {
                   const isActive = activeSection === link.href.substring(1);
                   return (
@@ -447,74 +483,80 @@ useEffect(() => {
                       key={link.name}
                       href={link.href}
                       onClick={(e) => handleClick(e, link.href)}
-                      initial={{ opacity: 0, x: -16 }}
-                      animate={{ opacity: 1, x: 0 }}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
                       transition={{
-                        delay: i * 0.052,
-                        duration: 0.35,
+                        delay: i * 0.04,
+                        duration: 0.32,
                         ease: [0.16, 1, 0.3, 1],
                       }}
-                      className="flex items-center justify-between px-4 py-[14px] focus-visible:outline-none"
+                      className="flex items-center gap-3 px-4 py-4 focus-visible:outline-none"
                       style={{
                         borderRadius: 14,
                         background: isActive
-                          ? "linear-gradient(135deg, rgba(120,80,255,0.18), rgba(56,189,248,0.1))"
-                          : "transparent",
+                          ? "linear-gradient(135deg, rgba(120,80,255,0.2), rgba(56,189,248,0.1))"
+                          : "rgba(255,255,255,0.04)",
                         border: `1px solid ${
                           isActive
-                            ? "rgba(120,80,255,0.22)"
-                            : "transparent"
+                            ? "rgba(120,80,255,0.28)"
+                            : "rgba(255,255,255,0.06)"
                         }`,
                         transition: "background 0.2s, border-color 0.2s",
+                        /* Large touch target */
+                        minHeight: 60,
+                        WebkitTapHighlightColor: "transparent",
                       }}
                     >
-                      <div className="flex items-center gap-4">
-                        <span
-                          className="font-mono"
-                          style={{
-                            fontSize: 10,
-                            letterSpacing: "0.1em",
-                            color: isActive
-                              ? "rgba(120,80,255,0.9)"
-                              : "rgba(255,255,255,0.18)",
-                          }}
-                        >
-                          {link.index}
-                        </span>
-                        <span
-                          className="font-semibold"
-                          style={{
-                            fontSize: 16,
-                            letterSpacing: "0.01em",
-                            color: isActive
-                              ? "#fff"
-                              : "rgba(255,255,255,0.5)",
-                            fontFamily:
-                              "'SF Pro Display', system-ui, sans-serif",
-                          }}
-                        >
-                          {link.name}
-                        </span>
-                      </div>
+                      {/* Active indicator dot or index */}
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: 28,
+                          height: 28,
+                          borderRadius: 8,
+                          flexShrink: 0,
+                          background: isActive
+                            ? "linear-gradient(135deg, rgba(120,80,255,0.35), rgba(56,189,248,0.25))"
+                            : "rgba(255,255,255,0.05)",
+                          border: `1px solid ${isActive ? "rgba(120,80,255,0.4)" : "rgba(255,255,255,0.06)"}`,
+                          fontSize: 10,
+                          fontFamily: "monospace",
+                          letterSpacing: "0.08em",
+                          color: isActive
+                            ? "rgba(140,100,255,1)"
+                            : "rgba(255,255,255,0.22)",
+                          transition: "all 0.2s",
+                        }}
+                      >
+                        {link.index}
+                      </span>
 
-                      {isActive ? (
+                      <span
+                        className="font-semibold truncate"
+                        style={{
+                          fontSize: 15,
+                          letterSpacing: "0.01em",
+                          color: isActive
+                            ? "#fff"
+                            : "rgba(255,255,255,0.52)",
+                          fontFamily:
+                            "'SF Pro Display', system-ui, sans-serif",
+                        }}
+                      >
+                        {link.name}
+                      </span>
+
+                      {isActive && (
                         <span
-                          className="w-2 h-2 rounded-full"
+                          className="ml-auto flex-shrink-0 w-[6px] h-[6px] rounded-full"
                           style={{
                             background:
                               "linear-gradient(135deg, #7850ff, #38bdf8)",
-                            boxShadow: "0 0 10px rgba(120,80,255,0.8)",
+                            boxShadow: "0 0 8px rgba(120,80,255,0.9)",
                           }}
                         />
-                      ) : (
-                        <span
-                          style={{
-                            color: "rgba(255,255,255,0.15)",
-                            fontSize: 14,
-                          }}
-                        >
-                          →
-                        </span>
                       )}
                     </motion.a>
                   );
@@ -524,24 +566,25 @@ useEffect(() => {
               {/* Divider */}
               <div
                 className="mx-4"
-                style={{
-                  height: 1,
-                  background: "rgba(255,255,255,0.05)",
-                }}
+                style={{ height: 1, background: "rgba(255,255,255,0.05)" }}
               />
 
               {/* CTA button */}
               <motion.div
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.34, duration: 0.35 }}
+                transition={{ delay: 0.28, duration: 0.35 }}
                 className="px-3 py-3"
               >
                 <a
                   href="#contact"
                   onClick={(e) => handleClick(e, "#contact")}
-                  className="relative flex items-center justify-center gap-2 w-full py-4 overflow-hidden focus-visible:outline-none"
-                  style={{ borderRadius: 14 }}
+                  className="relative flex items-center justify-center gap-2 w-full overflow-hidden focus-visible:outline-none"
+                  style={{
+                    borderRadius: 14,
+                    height: 52,
+                    WebkitTapHighlightColor: "transparent",
+                  }}
                 >
                   <span
                     className="absolute inset-0"
@@ -558,8 +601,7 @@ useEffect(() => {
                     style={{
                       fontSize: 15,
                       letterSpacing: "0.04em",
-                      fontFamily:
-                        "'SF Pro Display', system-ui, sans-serif",
+                      fontFamily: "'SF Pro Display', system-ui, sans-serif",
                     }}
                   >
                     Get In Touch ↗
@@ -569,7 +611,7 @@ useEffect(() => {
 
               {/* Footer meta row */}
               <div
-                className="flex items-center justify-between px-7 py-3 border-t"
+                className="flex items-center justify-between px-6 py-3 border-t"
                 style={{ borderColor: "rgba(255,255,255,0.04)" }}
               >
                 <span

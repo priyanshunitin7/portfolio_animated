@@ -6,8 +6,8 @@ export default function About() {
   return (
     <section id="about" className="relative z-20 bg-[#0a0a0a] py-32 px-6 md:px-12 lg:px-24 border-t border-white/5 overflow-hidden">
       {/* Dynamic ambient background glow */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
+      <div className="absolute top-0 right-0 w-[clamp(200px,60vw,500px)] h-[clamp(200px,60vw,500px)] bg-purple-600/20 rounded-full blur-[150px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[clamp(200px,60vw,400px)] h-[clamp(200px,60vw,400px)] bg-blue-600/10 rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
@@ -70,7 +70,7 @@ export default function About() {
               </div>
               <div className="p-6 rounded-2xl bg-gradient-to-br from-white/[0.05] to-transparent border border-white/10 hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.15)] transition-all duration-300">
                 <p className="text-zinc-500 text-xs tracking-widest uppercase mb-2">Focus</p>
-                <p className="text-white font-medium whitespace-nowrap">ML & Algorithms</p>
+                <p className="text-white font-medium">ML & Algorithms</p>
               </div>
               <div className="p-6 rounded-2xl bg-gradient-to-br from-white/[0.05] to-transparent border border-white/10 hover:border-orange-500/50 hover:shadow-[0_0_30px_rgba(249,115,22,0.15)] transition-all duration-300 col-span-2 md:col-span-1">
                 <p className="text-zinc-500 text-xs tracking-widest uppercase mb-2">Education</p>
