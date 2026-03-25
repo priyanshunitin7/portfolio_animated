@@ -61,7 +61,7 @@ export default function Projects() {
         >
           <div>
             <p className="text-pink-400 font-mono text-xs uppercase tracking-widest mb-4 flex items-center gap-3">
-              <span className="w-8 h-px bg-pink-400"></span>04. Selected Work
+              <span className="w-8 h-px bg-pink-400"></span>05. Selected Work
             </p>
             <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
               Featured <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-orange-400">Case Studies.</span>

@@ -17,7 +17,7 @@ export default function Experience() {
           className="mb-16 md:mb-24 flex flex-col items-center text-center"
         >
           <p className="text-blue-400 font-mono text-xs uppercase tracking-widest mb-4 flex items-center gap-3">
-            <span className="w-8 h-px bg-blue-400"></span>03. Journey<span className="w-8 h-px bg-blue-400"></span>
+            <span className="w-8 h-px bg-blue-400"></span>04. Journey<span className="w-8 h-px bg-blue-400"></span>
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
             Trace <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Record.</span>

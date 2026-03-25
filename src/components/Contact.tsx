@@ -29,7 +29,7 @@ export default function Contact() {
             className="flex flex-col"
           >
             <p className="text-cyan-400 font-mono text-xs uppercase tracking-widest mb-4 flex items-center gap-3">
-              <span className="w-8 h-px bg-cyan-400"></span>05. Connect
+              <span className="w-8 h-px bg-cyan-400"></span>06. Connect
             </p>
             <h2 className="text-4xl md:text-6xl font-bold text-white tracking-tight leading-tight mb-8">
               Let&apos;s build something <br className="hidden md:block"/>
